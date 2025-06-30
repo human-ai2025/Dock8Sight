@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker8sight
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker8sight
+  template:
+    metadata:
+      labels:
+        app: docker8sight
+    spec:
+      containers:
+      - name: docker8sight
+        image: docker8sight:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "100m"
+          limits:
+            memory: "64Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker8sight
+spec:
+  selector:
+    app: docker8sight
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: NodePort
